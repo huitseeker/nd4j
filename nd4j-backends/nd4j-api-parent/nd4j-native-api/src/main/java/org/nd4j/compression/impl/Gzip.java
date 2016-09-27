@@ -63,17 +63,14 @@ public class Gzip extends AbstractCompressor {
 
     @Override
     public DataBuffer compress(DataBuffer buffer) {
-        try {
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            GZIPOutputStream gzip = new GZIPOutputStream(stream);
-            DataOutputStream dos = new DataOutputStream(gzip);
+        try (ByteArrayOutputStream stream = new ByteArrayOutputStream();
+             GZIPOutputStream gzip = new GZIPOutputStream(stream);
+             DataOutputStream dos = new DataOutputStream(gzip)){
 
             buffer.write(dos);
-            dos.flush();
-            dos.close();
 
             byte[] bytes = stream.toByteArray();
-//            logger.info("Bytes: {}", Arrays.toString(bytes));
+            //            logger.info("Bytes: {}", Arrays.toString(bytes));
             BytePointer pointer = new BytePointer(bytes);
             CompressionDescriptor descriptor = new CompressionDescriptor(buffer, this);
             descriptor.setCompressedLength(bytes.length);
