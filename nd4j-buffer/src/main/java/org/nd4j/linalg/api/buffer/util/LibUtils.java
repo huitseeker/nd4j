@@ -1,4 +1,4 @@
-/*
+/*-
  * JCuda - Java bindings for NVIDIA CUDA driver and runtime API
  *
  * Copyright (c) 2009-2015 Marco Hutter - http://www.jcuda.org
