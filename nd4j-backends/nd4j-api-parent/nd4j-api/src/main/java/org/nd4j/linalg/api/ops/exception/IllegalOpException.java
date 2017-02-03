@@ -25,8 +25,7 @@ package org.nd4j.linalg.api.ops.exception;
  * @author Adam Gibson
  */
 public class IllegalOpException extends Exception {
-    public IllegalOpException() {
-    }
+    public IllegalOpException() {}
 
     public IllegalOpException(String message) {
         super(message);

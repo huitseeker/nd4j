@@ -29,7 +29,7 @@ public class LessThanOrEqual extends BaseCondition {
     /**
      * Special constructor for pairwise boolean operations.
      */
-    public LessThanOrEqual(){
+    public LessThanOrEqual() {
         super(0.0);
     }
 

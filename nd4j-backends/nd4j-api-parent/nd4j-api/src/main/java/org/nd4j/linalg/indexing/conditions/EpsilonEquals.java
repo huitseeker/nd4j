@@ -30,7 +30,7 @@ public class EpsilonEquals extends BaseCondition {
     /**
      * Special constructor for pairwise boolean operations.
      */
-    public EpsilonEquals(){
+    public EpsilonEquals() {
         super(0.0);
     }
 

@@ -97,7 +97,7 @@ public class MultipleEpochsIterator implements DataSetIterator {
     }
 
     @Override
-    public boolean resetSupported(){
+    public boolean resetSupported() {
         return iter.resetSupported();
     }
 

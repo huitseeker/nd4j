@@ -61,7 +61,7 @@ public class DropOutInverted extends BaseRandomOp {
 
     @Override
     public void init(INDArray x, INDArray y, INDArray z, long n) {
-        super.init(x,y,z,n);
-        this.extraArgs = new Object[]{p};
+        super.init(x, y, z, n);
+        this.extraArgs = new Object[] {p};
     }
 }

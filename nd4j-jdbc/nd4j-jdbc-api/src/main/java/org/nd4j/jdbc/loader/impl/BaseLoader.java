@@ -44,7 +44,8 @@ public abstract class BaseLoader implements JDBCNDArrayIO {
     protected String tableName, columnName, idColumnName, jdbcUrl;
     protected DataSource dataSource;
 
-    protected BaseLoader(DataSource dataSource, String jdbcUrl, String tableName, String idColumnName, String columnName) throws Exception {
+    protected BaseLoader(DataSource dataSource, String jdbcUrl, String tableName, String idColumnName,
+                    String columnName) throws Exception {
         this.dataSource = dataSource;
         this.jdbcUrl = jdbcUrl;
         this.tableName = tableName;

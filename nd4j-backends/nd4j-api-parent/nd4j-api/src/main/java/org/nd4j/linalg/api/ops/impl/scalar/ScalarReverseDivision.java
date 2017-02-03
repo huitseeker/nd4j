@@ -31,8 +31,7 @@ import org.nd4j.linalg.api.ops.Op;
  */
 public class ScalarReverseDivision extends BaseScalarOp {
 
-    public ScalarReverseDivision() {
-    }
+    public ScalarReverseDivision() {}
 
     public ScalarReverseDivision(INDArray x, INDArray y, INDArray z, long n, Number num) {
         super(x, y, z, n, num);

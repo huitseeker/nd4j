@@ -45,12 +45,14 @@ public class InstrumentationResource {
         Collection<LogEntry> alive = Nd4j.getInstrumentation().getStillAlive();
         return Response.ok(alive.size()).build();
     }
+
     @GET
     @Path("/numdead")
     public Response getNumDead() {
         Collection<LogEntry> alive = Nd4j.getInstrumentation().getDestroyed();
         return Response.ok(alive.size()).build();
     }
+
     @GET
     @Path("/alive")
     public Response getAlive() {

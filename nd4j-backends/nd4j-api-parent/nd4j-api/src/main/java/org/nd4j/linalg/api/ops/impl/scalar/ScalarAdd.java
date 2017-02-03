@@ -31,8 +31,7 @@ import org.nd4j.linalg.api.ops.Op;
  */
 public class ScalarAdd extends BaseScalarOp {
 
-    public ScalarAdd() {
-    }
+    public ScalarAdd() {}
 
     public ScalarAdd(INDArray x, INDArray y, INDArray z, long n, Number num) {
         super(x, y, z, n, num);
@@ -51,7 +50,7 @@ public class ScalarAdd extends BaseScalarOp {
     }
 
     public ScalarAdd(INDArray arr) {
-        this(arr,0);
+        this(arr, 0);
     }
 
     @Override

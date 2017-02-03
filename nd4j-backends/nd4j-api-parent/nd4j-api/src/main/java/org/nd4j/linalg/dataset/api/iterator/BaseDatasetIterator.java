@@ -82,7 +82,7 @@ public class BaseDatasetIterator implements DataSetIterator {
     }
 
     @Override
-    public boolean resetSupported(){
+    public boolean resetSupported() {
         return true;
     }
 

@@ -30,8 +30,7 @@ import org.nd4j.linalg.api.ops.Op;
  * @author Adam Gibson
  */
 public class ScalarDivision extends BaseScalarOp {
-    public ScalarDivision() {
-    }
+    public ScalarDivision() {}
 
     public ScalarDivision(INDArray x, INDArray y, INDArray z, long n, Number num) {
         super(x, y, z, n, num);
