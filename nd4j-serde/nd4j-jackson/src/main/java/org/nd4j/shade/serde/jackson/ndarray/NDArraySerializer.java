@@ -1,9 +1,9 @@
 package org.nd4j.shade.serde.jackson.ndarray;
 
 
-import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.databind.JsonSerializer;
-import com.fasterxml.jackson.databind.SerializerProvider;
+import org.nd4j.shade.jackson.core.JsonGenerator;
+import org.nd4j.shade.jackson.databind.JsonSerializer;
+import org.nd4j.shade.jackson.databind.SerializerProvider;
 import org.nd4j.linalg.api.ndarray.INDArray;
 import org.nd4j.linalg.factory.Nd4j;
 import org.nd4j.serde.base64.Nd4jBase64;
