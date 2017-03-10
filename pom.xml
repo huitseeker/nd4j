@@ -150,6 +150,42 @@
             </properties>
         </profile>
 
+        <!-- Run syntax checks, but only on non-window platforms -->
+        <profile>
+          <id>syntaxChecks</id>
+          <activation>
+            <os>
+              <family>!windows</family>
+            </os>
+          </activation>
+          <build>
+            <plugins>
+
+              <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>1.6.0</version>
+                <inherited>false</inherited>
+                <executions>
+                  <execution>
+                    <id>Check syntax</id>
+                    <phase>generate-sources</phase>
+                    <goals>
+                      <goal>exec</goal>
+                    </goals>
+                    <configuration>
+                      <executable>contrib/maybeFormat.sh</executable>
+                      <arguments>
+                        <argument>fromMaven</argument>
+                      </arguments>
+                    </configuration>
+                  </execution>
+                </executions>
+              </plugin>
+            </plugins>
+          </build>
+        </profile>
+
         <profile>
             <id>release-sign-artifacts</id>
             <activation>
@@ -236,7 +272,7 @@
         </profile>
     </profiles>
     <scm>
-        <connection>scm:git@github.com:deeplearning4j/nd4j.git</connection>
+        <connection>scm:git://github.com:deeplearning4j/nd4j.git</connection>
         <developerConnection>scm:git:git@github.com:deeplearning4j/nd4j.git</developerConnection>
         <url>git@github.com:deeplearning4j/nd4j.git</url>
         <tag> HEAD</tag>
@@ -391,7 +427,6 @@
                   <rule>VersionProp</rule>
                   <rule>DotVersionProperty</rule>
                 </onlyRunRules>
-                <xmlOutputFile>${project.build.directory}/maven-lint-result.xml</xmlOutputFile>
               </configuration>
               <executions>
                 <execution>
@@ -404,40 +439,23 @@
               </executions>
             </plugin>
             <plugin>
-              <groupId>org.commonjava.maven.plugins</groupId>
-              <artifactId>directory-maven-plugin</artifactId>
-              <version>0.1</version>
-              <executions>
-                <execution>
-                  <id>directories</id>
-                  <goals>
-                    <goal>highest-basedir</goal>
-                  </goals>
-                  <phase>validate</phase>
-                  <configuration>
-                    <property>nd4jBasedir</property>
-                    <project>
-                      <groupId>org.nd4j</groupId>
-                      <artifactId>nd4j</artifactId>
-                    </project>
-                  </configuration>
-                </execution>
-              </executions>
-            </plugin>
-
-            <plugin>
               <groupId>net.revelc.code.formatter</groupId>
               <artifactId>formatter-maven-plugin</artifactId>
               <version>2.0.0</version>
-              <executions>
-                <!-- <execution> -->
-                <!--   <goals> -->
-                <!--     <goal>validate</goal> -->
-                <!--   </goals> -->
-                <!-- </execution> -->
-              </executions>
               <configuration>
-                <configFile>${nd4jBasedir}/contrib/formatter.xml</configFile>
+                <configFile>${session.executionRootDirectory}/contrib/formatter.xml</configFile>
+                <directories>
+                  <directory>nd4j-shade</directory>
+                  <directory>nd4j-jdbc</directory>
+                  <directory>nd4j-instrumentation</directory>
+                  <directory>nd4j-perf</directory>
+                  <directory>nd4j-serde</directory>
+                  <directory>nd4j-bytebuddy</directory>
+                  <directory>nd4j-common</directory>
+                  <directory>nd4j-buffer</directory>
+                  <directory>nd4j-context</directory>
+                  <directory>nd4j-parameter-server-parent</directory>
+                </directories>
               </configuration>
             </plugin>
         </plugins>
