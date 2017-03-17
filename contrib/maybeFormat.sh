@@ -5,7 +5,7 @@ DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 # swich to build root directory
 pushd "$DIR/../"
 # Only run in interactive mode, so as not to thwart automated tests
-if [[ -t 0 || $1 == "fromMaven" ]]; then
+if [[ -t 0 ]]; then
     # test validation
     if !(mvn formatter:validate >/dev/null) then
        echo "Your working directory contains code that does not pass style checks."
