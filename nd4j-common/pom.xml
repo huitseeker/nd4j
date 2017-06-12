@@ -48,7 +48,6 @@
             </exclusions>
         </dependency>
 
-        <!-- used to alleviate licensing issues with findbugs -->
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
