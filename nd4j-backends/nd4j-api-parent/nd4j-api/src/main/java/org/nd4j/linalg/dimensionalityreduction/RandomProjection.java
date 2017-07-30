@@ -1,0 +1,181 @@
+package org.nd4j.linalg.dimensionalityreduction;
+
+import org.nd4j.linalg.api.ndarray.INDArray;
+import org.nd4j.linalg.api.ops.random.impl.GaussianDistribution;
+import org.nd4j.linalg.api.rng.Random;
+import org.nd4j.linalg.exception.ND4JIllegalStateException;
+import org.nd4j.linalg.factory.Nd4j;
+
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+
+/**
+ * Created by huitseeker on 7/28/17.
+ */
+public class RandomProjection {
+
+    private int components;
+    private Random rng;
+    private double eps;
+    private boolean autoMode;
+
+    public RandomProjection(double eps){
+        this.rng = Nd4j.getRandom();
+        this.eps = eps;
+        this.autoMode = true;
+    }
+
+    public RandomProjection(int components){
+        this.rng = Nd4j.getRandom();
+        this.components = components;
+        this.autoMode = false;
+    }
+
+    /**
+     * Find a safe number of components to project this to, through
+     * the Johnson-Lindenstrauss lemma
+     * The minimum number n' of components to guarantee the eps-embedding is
+     * given by:
+     *
+     * n' >= 4 log(n) / (eps² / 2 - eps³ / 3)
+     *
+     * see http://cseweb.ucsd.edu/~dasgupta/papers/jl.pdf §2.1
+     * @param n Number of samples. If an array is given, it will compute
+     *        a safe number of components array-wise.
+     * @param eps Maximum distortion rate as defined by the Johnson-Lindenstrauss lemma.
+     *            Will compute array-wise if an array is given.
+     * @return
+     */
+    public static ArrayList<Integer> johnsonLindenstraussMinDim(int[] n, double... eps){
+        Boolean basicCheck = n == null || n.length == 0 || eps == null || eps.length == 0;
+        if (basicCheck)
+            throw new IllegalArgumentException("Johnson-Lindenstrauss dimension estimation requires > 0 components and at least a relative error");
+        for (int i =0; i < eps.length; i++){
+            if (eps[i] <= 0 || eps[i] >= 1) {
+                throw new IllegalArgumentException("A relative error should be in ]0, 1[");
+            }
+        }
+        ArrayList<Integer> res = new ArrayList(n.length * eps.length);
+        for (double epsilon : eps){
+            double denom = (Math.pow(epsilon, 2) / 2 - Math.pow(epsilon, 3) / 3);
+            for (int components: n){
+                res.add((int) (4 * Math.log(components) / denom));
+            }
+        }
+        return res;
+    }
+
+    public static ArrayList<Integer> johnsonLindenStraussMinDim(int n, double... eps){
+        return johnsonLindenstraussMinDim(new int[]{n}, eps);
+    }
+
+    /**
+     * Generate a dense Gaussian random matrix.
+     *
+     *   The n' components of the random matrix are drawn from
+     *       N(0, 1.0 / n').
+     *
+     * @param shape
+     * @param rng
+     * @return
+     */
+    private INDArray gaussianRandomMatrix(int[] shape, Random rng){
+        Nd4j.checkShapeValues(shape);
+        INDArray res = Nd4j.create(shape);
+
+        GaussianDistribution op1 = new GaussianDistribution(res, 0.0, 1.0 / Math.sqrt(shape[0]));
+        Nd4j.getExecutioner().exec(op1, rng);
+        return res;
+    }
+
+    /**
+     *
+     * Compute the target shape of the projection matrix
+     * @param shape the shape of the data tensor
+     * @param eps the relative error used in the Johnson-Lindenstrauss estimation
+     * @param auto whether to use JL estimation for user specification
+     * @param targetDimension the target size for the
+     *
+     */
+    private static int[] targetShape(int[] shape, double eps, int targetDimension, boolean auto){
+        int components = targetDimension;
+        if (auto) components = johnsonLindenStraussMinDim(shape[0], eps).get(0);
+        // JL or user spec edge cases
+        if (components <= 0 || components > shape[1]){
+            throw new ND4JIllegalStateException(String.format("Estimation led to a target dimension of %d, which is invalid", components));
+        }
+        return new int[]{ shape[1], components};
+    }
+
+    /**
+     * Compute the target shape of a suitable projection matrix
+     * @param X the Data tensor
+     * @param eps the relative error used in the Johnson-Lindenstrauss estimation
+     * @return the shape of the projection matrix to use
+     */
+    protected static int[] targetShape(INDArray X, double eps) {
+        return targetShape(X.shape(), eps, -1, true);
+    }
+
+    /**
+     * Compute the target shape of a suitable projection matrix
+     * @param X the Data Tensor
+     * @param targetDimension a desired dimension
+     * @return the shape of the projection matrix to use
+     */
+    protected static int[] targetShape(INDArray X, int targetDimension) {
+        return targetShape(X.shape(), -1, targetDimension, false);
+    }
+
+
+    /**
+     * Create a copy random projection by using matrix product with a random matrix
+     * @param data
+     * @return the projected matrix
+     */
+    public INDArray project(INDArray data){
+        int[] tShape = targetShape(data.shape(), eps, components, autoMode);
+        return data.mmul(gaussianRandomMatrix(tShape, this.rng));
+    }
+
+    /**
+     * Create a copy random projection by using matrix product with a random matrix
+     *
+     * @param data
+     * @param result a placeholder result
+     * @return
+     */
+    public INDArray project(INDArray data, INDArray result){
+        int[] tShape = targetShape(data.shape(), eps, components, autoMode);
+        INDArray z1 = Nd4j.zeros(data.shape()[0], tShape[1]);
+        return data.mmul(gaussianRandomMatrix(tShape, this.rng), z1);
+    }
+
+    /**
+     * Create an in-place random projection by using in-place matrix product with a random matrix
+     * @param data
+     * @return the projected matrix
+     */
+    public INDArray projecti(INDArray data){
+        int[] tShape = targetShape(data.shape(), eps, components, autoMode);
+        return data.mmuli(gaussianRandomMatrix(tShape, this.rng));
+    }
+
+    /**
+     * Create an in-place random projection by using in-place matrix product with a random matrix
+     *
+     * @param data
+     * @param result a placeholder result
+     * @return
+     */
+    public INDArray projecti(INDArray data, INDArray result){
+        int[] tShape = targetShape(data.shape(), eps, components, autoMode);
+        INDArray z1 = Nd4j.zeros(data.shape()[0], tShape[1]);
+        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), z1);
+    }
+
+
+
+}
