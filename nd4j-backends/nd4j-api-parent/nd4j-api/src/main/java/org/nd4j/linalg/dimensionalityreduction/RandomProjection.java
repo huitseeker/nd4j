@@ -9,6 +9,7 @@ import org.nd4j.linalg.factory.Nd4j;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -48,7 +49,7 @@ public class RandomProjection {
      *            Will compute array-wise if an array is given.
      * @return
      */
-    public static ArrayList<Integer> johnsonLindenstraussMinDim(int[] n, double... eps){
+    public static List<Integer> johnsonLindenstraussMinDim(int[] n, double... eps){
         Boolean basicCheck = n == null || n.length == 0 || eps == null || eps.length == 0;
         if (basicCheck)
             throw new IllegalArgumentException("Johnson-Lindenstrauss dimension estimation requires > 0 components and at least a relative error");
@@ -57,7 +58,7 @@ public class RandomProjection {
                 throw new IllegalArgumentException("A relative error should be in ]0, 1[");
             }
         }
-        ArrayList<Integer> res = new ArrayList(n.length * eps.length);
+        List<Integer> res = new ArrayList(n.length * eps.length);
         for (double epsilon : eps){
             double denom = (Math.pow(epsilon, 2) / 2 - Math.pow(epsilon, 3) / 3);
             for (int components: n){
@@ -67,7 +68,7 @@ public class RandomProjection {
         return res;
     }
 
-    public static ArrayList<Integer> johnsonLindenStraussMinDim(int n, double... eps){
+    public static List<Integer> johnsonLindenStraussMinDim(int n, double... eps){
         return johnsonLindenstraussMinDim(new int[]{n}, eps);
     }
 
