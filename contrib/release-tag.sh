@@ -33,3 +33,7 @@ git tag $RELEASE_TAG
 $MVN versions:set -DnewVersion=$NEXT_VERSION | grep -v "no value" # silence logs
 
 git commit -a -m "Preparing development version $NEXT_VERSION"
+
+# Push changes
+# git push origin $RELEASE_TAG
+# git push origin HEAD:$GIT_BRANCH
