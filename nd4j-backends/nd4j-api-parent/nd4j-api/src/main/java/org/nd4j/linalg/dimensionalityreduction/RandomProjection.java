@@ -53,8 +53,8 @@ public class RandomProjection {
         Boolean basicCheck = n == null || n.length == 0 || eps == null || eps.length == 0;
         if (basicCheck)
             throw new IllegalArgumentException("Johnson-Lindenstrauss dimension estimation requires > 0 components and at least a relative error");
-        for (int i =0; i < eps.length; i++){
-            if (eps[i] <= 0 || eps[i] >= 1) {
+        for (double epsilon: eps){
+            if (epsilon <= 0 || epsilon >= 1) {
                 throw new IllegalArgumentException("A relative error should be in ]0, 1[");
             }
         }
