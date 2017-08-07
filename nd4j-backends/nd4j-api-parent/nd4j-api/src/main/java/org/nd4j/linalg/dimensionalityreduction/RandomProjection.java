@@ -22,16 +22,24 @@ public class RandomProjection {
     private double eps;
     private boolean autoMode;
 
-    public RandomProjection(double eps){
-        this.rng = Nd4j.getRandom();
+    public RandomProjection(double eps, Random rng){
+        this.rng = rng;
         this.eps = eps;
         this.autoMode = true;
     }
 
-    public RandomProjection(int components){
-        this.rng = Nd4j.getRandom();
+    public RandomProjection(double eps){
+        this(eps, Nd4j.getRandom());
+    }
+
+    public RandomProjection(int components, Random rng){
+        this.rng = rng;
         this.components = components;
         this.autoMode = false;
+    }
+
+    public RandomProjection(int components){
+        this(components, Nd4j.getRandom());
     }
 
     /**
