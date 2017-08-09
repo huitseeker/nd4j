@@ -112,7 +112,7 @@ public class RandomProjection {
         int components = targetDimension;
         if (auto) components = johnsonLindenStraussMinDim(shape[0], eps).get(0);
         // JL or user spec edge cases
-        if (components <= 0 || components > shape[1]){
+        if (auto && (components <= 0 || components > shape[1])){
             throw new ND4JIllegalStateException(String.format("Estimation led to a target dimension of %d, which is invalid", components));
         }
         return new int[]{ shape[1], components};
