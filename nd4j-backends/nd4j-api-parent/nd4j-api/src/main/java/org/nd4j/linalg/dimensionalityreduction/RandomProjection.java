@@ -158,8 +158,7 @@ public class RandomProjection {
      */
     public INDArray project(INDArray data, INDArray result){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        INDArray z1 = Nd4j.zeros(data.shape()[0], tShape[1]);
-        return data.mmul(gaussianRandomMatrix(tShape, this.rng), z1);
+        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), result);
     }
 
     /**
@@ -181,8 +180,7 @@ public class RandomProjection {
      */
     public INDArray projecti(INDArray data, INDArray result){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        INDArray z1 = Nd4j.zeros(data.shape()[0], tShape[1]);
-        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), z1);
+        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), result);
     }
 
 
