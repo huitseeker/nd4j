@@ -99,6 +99,14 @@ public class RandomProjection {
         return res;
     }
 
+    private int[] projectionMatrixShape;
+    private INDArray _projectionMatrix;
+    private INDArray getProjectionMatrix(int[] shape, Random rng){
+        if (! Arrays.equals(projectionMatrixShape, shape) || _projectionMatrix == null)
+            _projectionMatrix = gaussianRandomMatrix(shape, rng);
+        return _projectionMatrix;
+    }
+
     /**
      *
      * Compute the target shape of the projection matrix
@@ -146,7 +154,7 @@ public class RandomProjection {
      */
     public INDArray project(INDArray data){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        return data.mmul(gaussianRandomMatrix(tShape, this.rng));
+        return data.mmul(getProjectionMatrix(tShape, this.rng));
     }
 
     /**
@@ -158,7 +166,7 @@ public class RandomProjection {
      */
     public INDArray project(INDArray data, INDArray result){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), result);
+        return data.mmuli(getProjectionMatrix(tShape, this.rng), result);
     }
 
     /**
@@ -168,7 +176,7 @@ public class RandomProjection {
      */
     public INDArray projecti(INDArray data){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        return data.mmuli(gaussianRandomMatrix(tShape, this.rng));
+        return data.mmuli(getProjectionMatrix(tShape, this.rng));
     }
 
     /**
@@ -180,7 +188,7 @@ public class RandomProjection {
      */
     public INDArray projecti(INDArray data, INDArray result){
         int[] tShape = targetShape(data.shape(), eps, components, autoMode);
-        return data.mmuli(gaussianRandomMatrix(tShape, this.rng), result);
+        return data.mmuli(getProjectionMatrix(tShape, this.rng), result);
     }
 
 

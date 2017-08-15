@@ -93,6 +93,17 @@ public class TestRandomProjection extends BaseNd4jTest {
     }
 
 
+    private void testRandomProjectionDeterministicForSameShape(){
+        INDArray z1 = Nd4j.randn(1000, 500);
+        RandomProjection rp = new RandomProjection(50);
+        INDArray res1 = Nd4j.zeros(10000, 442);
+        rp.projecti(z1, res1);
+
+        INDArray res2 = Nd4j.zeros(10000, 442);
+        rp.projecti(z1, res2);
+
+        assertEquals(res1, res2);
+    }
 
     @Test
     public void testBasicEmbedding() {
